@@ -1,0 +1,20 @@
+{# Load Base Template#}
+ {% extends "./base.html" %}
+
+ {% load bootstrap5 %} 
+
+{% block contentPage %}
+<form class="my-5 d-flex flex-column  align-items-center " method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="w-50">
+        <h1 class="text-primary mb-5">Upload File Project 📋</h1>
+        {% bootstrap_form EmployeeForm %}
+        <button type="button" class="btn btn-success mt-3" onclick="addcertificateInput()"> Add Certificate</button>
+        <div id="certificate_input_wrapper" class="mt-3">
+        </div>
+        <button type="submit" class="btn btn-primary"> Save Employee</button>
+        </form>
+    </div>
+
+{% endblock contentPage %}

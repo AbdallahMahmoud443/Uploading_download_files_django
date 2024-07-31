@@ -1,0 +1,72 @@
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload File Project</title>
+</head>
+
+<body>
+    <div class="container my-5">
+  
+        {% block contentPage %}
+
+        {% endblock contentPage %}
+    </div>
+    <script>
+        let certificates_Count = 0;
+        const addcertificateInput = function () {
+            console.log(certificates_Count)
+            if (certificates_Count < 10) {
+
+                let inputWrapper = document.getElementById('certificate_input_wrapper');
+                // create Container Div of Input
+                let newInput = document.createElement('div');
+                newInput.classList.add('input-group', 'my-3');
+                // Create Input 
+                let fileInput = document.createElement('input');
+                // defined of input properties
+                fileInput.type = 'file'
+                fileInput.name = 'certificates_files' // important for get data
+                fileInput.classList.add('form-control')
+                fileInput.multiple = true
+                /*
+
+                // Create Label
+                let customLabelInput = document.createElement('label');
+                customLabelInput.classList.add('form-label');
+                customLabelInput.setAttribute('for', 'customFile');
+                // Create File Name user selected
+                fileInput.addEventListener('change', function () {
+                    let fileName = Array.from(this.files).map(file => file.name).join(', ');
+                    customLabelInput.textContent = fileName;
+                });
+                */
+
+                // Add Delete Button for each File Input
+                let removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.type = 'button';
+                removeButton.classList.add('btn', 'btn-danger');
+                removeButton.addEventListener('click', function () {
+                    inputWrapper.removeChild(newInput);
+                    certificates_Count--;
+                });
+                
+                newInput.appendChild(fileInput)
+                newInput.appendChild(removeButton)
+                inputWrapper.appendChild(newInput)
+                certificates_Count++;
+            }
+        }
+    </script>
+</body>
+
+</html>
