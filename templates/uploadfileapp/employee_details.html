@@ -1,0 +1,58 @@
+{# Load Base Template#}
+{% extends "./base.html" %}
+
+{% load bootstrap5 %} 
+
+{% block contentPage %}
+   <div class="w-50">
+       <h1 class="text-primary mb-5">Employee Details </h1>
+        <div>
+         <h3>{{ employee.firstName }} {{ employee.lastName }}</h3>
+
+        {% if employee.cvFile %}
+            <p><strong>CV:</strong> 
+                <a href="{{ employee.cvFile.url }}" download="{{ employee.cvFile.name }}">
+                    {{ employee.cvFile.name }}
+                </a>
+            </p>
+        {% else %}
+            <p><strong>CV:</strong> No CV available</p>
+        {% endif %}
+
+        {% if employee.photoFile %}
+            <p><strong>Photo:</strong> 
+                <a href="{{ employee.photoFile.url }}" download="{{ employee.photoFile.name }}">
+                    {{ employee.photoFile.name }}
+                </a>
+            </p>
+        {% else %}
+            <p><strong>Photo:</strong> No photo available</p>
+        {% endif %}
+
+        {% comment "" %}
+        {% if pan_card_pic_base64 %}
+            <!-- Display PAN Card Picture information -->
+            <p><strong>PAN Card:</strong></p>
+            <img src="data:image/jpeg;base64,{{ pan_card_pic_base64 }}" alt="PAN Card">
+        {% else %}
+            <p><strong>PAN Card:</strong> No PAN Card picture available</p>
+        {% endif %}
+        {% endcomment %}
+
+        <h3>Certificates</h3>
+        <ul>
+        {% for certificate in certificates %}
+            <li>
+            <a href="{{ certificate.certificateFile.url }}" 
+            download="{{ certificate.certificateFile.name }}">
+            {{ certificate.certificateFile.name }}
+            </a>     
+            </li>
+        {% endfor %}
+        </ul>
+        <a href="{% url 'ShowEmployeesPage' %}" class="btn btn-secondary">Back</a>
+   
+   </div>
+</div>
+
+{% endblock contentPage %}

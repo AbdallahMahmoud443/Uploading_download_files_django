@@ -1,18 +1,18 @@
 import os
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from uploadfileapp.forms import EmployeeForm
 from django.contrib import messages
 
-from uploadfileapp.models import EmployeeCertificates
+from uploadfileapp.models import Employee, EmployeeCertificates
 # Create your views here.
 
 def CreaetEmployee(request):
- 
     if request.method == "POST":
        employeeForm = EmployeeForm(request.POST,request.FILES)
        certificates_files = request.FILES.getlist('certificates_files')
        if employeeForm.is_valid():
-           employee = employeeForm.save()
+           employee = employeeForm.save() # save employee
+           
            if len(certificates_files) > 10:
                messages.error(request,'You Can Upload Maximum of 10 certificates')
                return redirect('createEmployeePage')
@@ -38,11 +38,35 @@ def CreaetEmployee(request):
                     employee= employee,
                     # save path, not file object
                     certificateFile=newFilePath
-                )
-                
+                )     
     else:
         employeeForm = EmployeeForm()  
            
     return render(request,'uploadfileapp/create_employee.html',{
         'EmployeeForm':employeeForm
+    })
+    
+
+def ShowEmployees(request):
+    employees = Employee.objects.all()
+    # Calculate remaining certificates for each employee
+    employees_data = []
+    for employee in employees:
+        existing_certificates = len(EmployeeCertificates.objects.filter(employee=employee))
+        remaining_certificates = 10 - existing_certificates
+        employees_data.append({
+            'employee':employee,
+            'remaining_certificates':remaining_certificates
+        })
+        
+    return render(request,'uploadfileapp/show_employees.html',{'employees_data':employees_data})
+
+def EmployeeDetails(request,employee_id):
+    # get employee based on id 
+    employee = get_object_or_404(Employee,pk=employee_id)
+    certificates = EmployeeCertificates.objects.filter(employee=employee)
+    
+    return render(request,'uploadfileapp/employee_details.html',{
+        'employee':employee,
+        'certificates':certificates
     })

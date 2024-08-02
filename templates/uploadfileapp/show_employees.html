@@ -1,0 +1,34 @@
+{# Load Base Template#}
+{% extends "./base.html" %}
+
+{% load bootstrap5 %} 
+
+{% block contentPage %}
+   <div class="w-50">
+       <h1 class="text-primary mb-5">Employees Details 📂</h1>
+       <table class="table">
+        <thead class="table-primary">
+            <tr>
+                <th>Employee Id</th>
+                <th>FistName</th>
+                <th>LastName</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for  employee_data in  employees_data%}
+            <tr>
+                <td>{{employee_data.employee.id}}</td>
+                <td>{{employee_data.employee.firstName}}</td>
+                <td>{{employee_data.employee.lastName}}</td>
+                <td><a href="{% url 'EmployeeDetailsPage' employee_data.employee.id%}">Details</a></td>
+            </tr>
+            {% endfor %}
+      
+        </tbody>
+
+       </table>
+
+   </div>
+
+{% endblock contentPage %}
