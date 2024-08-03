@@ -1,3 +1,4 @@
+import base64
 import os
 from django.shortcuts import get_object_or_404, redirect, render
 from uploadfileapp.forms import EmployeeForm
@@ -11,7 +12,13 @@ def CreaetEmployee(request):
        employeeForm = EmployeeForm(request.POST,request.FILES)
        certificates_files = request.FILES.getlist('certificates_files')
        if employeeForm.is_valid():
-           employee = employeeForm.save() # save employee
+           employee = employeeForm.save(commit=False) # save employee
+           # before save make sure image is saved into data base (upload image inyo database)
+           pan_card_pic = request.FILES.get('pan_card_pic_blob')
+           if pan_card_pic:
+              employee.pan_card_pic_blob = pan_card_pic.read() #! reading binary image and store it in database important step
+               
+           employee.save()
            
            if len(certificates_files) > 10:
                messages.error(request,'You Can Upload Maximum of 10 certificates')
@@ -65,8 +72,11 @@ def EmployeeDetails(request,employee_id):
     # get employee based on id 
     employee = get_object_or_404(Employee,pk=employee_id)
     certificates = EmployeeCertificates.objects.filter(employee=employee)
-    
+    # Convert Binary Image data to base64
+    pan_card_pic_base64 = base64.b64encode(employee.pan_card_pic_blob).decode('utf-8') if employee.pan_card_pic_blob else None
+
     return render(request,'uploadfileapp/employee_details.html',{
         'employee':employee,
-        'certificates':certificates
+        'certificates':certificates,
+        'pan_card_pic_base64':pan_card_pic_base64
     })

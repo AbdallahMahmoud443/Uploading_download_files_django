@@ -29,16 +29,16 @@
             <p><strong>Photo:</strong> No photo available</p>
         {% endif %}
 
-        {% comment "" %}
+      
         {% if pan_card_pic_base64 %}
             <!-- Display PAN Card Picture information -->
             <p><strong>PAN Card:</strong></p>
-            <img src="data:image/jpeg;base64,{{ pan_card_pic_base64 }}" alt="PAN Card">
+            <!-- This Image Come From Database -->
+             {# column:contentType,{text =>base64} #}
+            <img src="data:image/jpeg;base64,{{ pan_card_pic_base64 }}" alt="PAN Card" width ="50">
         {% else %}
             <p><strong>PAN Card:</strong> No PAN Card picture available</p>
         {% endif %}
-        {% endcomment %}
-
         <h3>Certificates</h3>
         <ul>
         {% for certificate in certificates %}
